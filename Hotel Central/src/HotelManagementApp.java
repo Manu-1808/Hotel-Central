@@ -11,6 +11,9 @@ public class HotelManagementApp {
     private CardLayout cardLayout;
     private JPanel mainContainer;
     private Bienvenida bienvenida;
+    MainDashboardPanel dashboard;
+    JComboBox<Cliente> clientCombo;
+    JComboBox<Habitacion> roomCombo;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -57,15 +60,14 @@ public class HotelManagementApp {
     }
 
     private void guardarYSalir() {
+        dashboard.cleanup();
         int option = JOptionPane.showConfirmDialog(frame,
-                "¿Desea guardar los cambios antes de salir?",
+                "           ¿Desea salir?",
                 "Confirmar salida",
-                JOptionPane.YES_NO_CANCEL_OPTION);
+                JOptionPane.YES_NO_OPTION);
 
         if (option == JOptionPane.YES_OPTION) {
             hotel.guardarDatos();
-            System.exit(0);
-        } else if (option == JOptionPane.NO_OPTION) {
             System.exit(0);
         }
     }
@@ -113,7 +115,8 @@ public class HotelManagementApp {
         tabbedPane.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         tabbedPane.setBackground(new Color(240, 245, 250));
 
-        tabbedPane.addTab("Inicio", new ImageIcon("home.png"), new MainDashboardPanel(hotel));
+        dashboard = new MainDashboardPanel(hotel);
+        tabbedPane.addTab("Inicio", new ImageIcon("home.png"), dashboard);
 
         createReservationTab();
         createRoomsTab();
@@ -159,13 +162,13 @@ public class HotelManagementApp {
         // Componentes del formulario
         JLabel clientLabel = new JLabel("Cliente:");
         clientLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        JComboBox<Cliente> clientCombo = new JComboBox<>();
+        clientCombo = new JComboBox<>();
         clientCombo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         hotel.getClientes().forEach(clientCombo::addItem);
 
         JLabel roomLabel = new JLabel("Habitación:");
         roomLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        JComboBox<Habitacion> roomCombo = new JComboBox<>();
+        roomCombo = new JComboBox<>();
         roomCombo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         hotel.getHabitaciones().forEach(roomCombo::addItem);
 
@@ -419,6 +422,10 @@ public class HotelManagementApp {
                                 + "<p>" + habitacion.toString() + "</p></div></html>",
                         "Éxito",
                         JOptionPane.INFORMATION_MESSAGE);
+
+                roomCombo.removeAllItems();
+                hotel.getHabitaciones().forEach(roomCombo::addItem);
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(dialog,
                         "<html><div style='text-align: center; color: #B91C1C;'>"
@@ -542,6 +549,10 @@ public class HotelManagementApp {
                                 + "<p>" + cliente.toString() + "</p></div></html>",
                         "Éxito",
                         JOptionPane.INFORMATION_MESSAGE);
+
+                clientCombo.removeAllItems();
+                hotel.getClientes().forEach(clientCombo::addItem);
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(dialog,
                         "<html><div style='text-align: center; color: #B91C1C;'>"

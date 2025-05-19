@@ -19,17 +19,10 @@ public class Bienvenida extends JPanel {
         topPanel.setBackground(new Color(30, 80, 120));
         topPanel.setPreferredSize(new Dimension(800, 180));
 
-        //ImageIcon icon = new ImageIcon(new URL() Objects.requireNonNull(getClass().getResource("/logo.jpg")));
-        ImageIcon icon = new ImageIcon("/home/manufg/Descargas/Hotel.jpeg");
-        Image image = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-        JLabel imageLabel = new JLabel(new ImageIcon(image));
-
-
         JLabel titleLabel = new JLabel("HOTEL CENTRAL", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 48));
         titleLabel.setForeground(Color.WHITE);
 
-        topPanel.add(imageLabel);
         topPanel.add(titleLabel);
 
         // Panel central con imagen
@@ -37,13 +30,17 @@ public class Bienvenida extends JPanel {
         centerPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
         centerPanel.setBackground(new Color(240, 245, 250));
 
+        ImageIcon icon = new ImageIcon("/home/manufg/Documentos/Hotel Central/src/images/sistema.png");
+        Image image = icon.getImage().getScaledInstance(250, 175, Image.SCALE_SMOOTH);
+        JLabel imageLabel = new JLabel(new ImageIcon(image));
+
         JLabel welcomeLabel = new JLabel("<html><div style='text-align: center;'>"
                 + "<h1 style='color: #1E3A8A;'>Sistema de Gestión Hotelera</h1>"
                 + "<p style='color: #4B5563; font-size: 14pt;'>Administración de reservas, huéspedes y habitaciones</p>"
                 + "<p style='color: #6B7280; font-size: 12pt;'>By: Manu Flores<br>Versión 2.0</p></div></html>",
                 SwingConstants.CENTER);
 
-
+        centerPanel.add(imageLabel, BorderLayout.CENTER);
         centerPanel.add(welcomeLabel, BorderLayout.SOUTH);
 
         // Panel inferior con botón

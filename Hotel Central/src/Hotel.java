@@ -10,6 +10,7 @@ public class Hotel implements IHotel, Serializable {
     private List<Cliente> clientes;
     private List<Habitacion> habitaciones;
     private List<Reserva> reservas;
+    private List<HotelStateObserver> observers = new ArrayList<>();
     private static final String DATA_FILE = "hotel_data.dat";
 
     public Hotel() {
@@ -72,6 +73,24 @@ public class Hotel implements IHotel, Serializable {
         }
     }
 
+    public void addObserver(HotelStateObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(HotelStateObserver observer) {
+        observers.remove(observer);
+    }
+
+    private void notifyObservers() {
+        int availableRooms = buscarHabitacionesDisponibles(LocalDate.now(), LocalDate.now().plusDays(1)).size();
+        int activeReservations = (int) getHistorial().stream()
+                .filter(r -> !r.getFechaFin().isBefore(LocalDate.now()) && !r.getFechaInicio().isAfter(LocalDate.now()))
+                .count();
+        int registeredClients = getClientes().size();
+
+        observers.forEach(o -> o.onHotelStateChanged(availableRooms, activeReservations, registeredClients));
+    }
+
     // metodos de ihotel
     @Override
     public void agregarReserva(Reserva reserva) throws HabitacionOcupadaException {
@@ -87,6 +106,7 @@ public class Hotel implements IHotel, Serializable {
         reserva.getCliente().agregarReserva(reserva);
         reserva.getHabitacion().agregarReserva(reserva);
         guardarDatos();
+        notifyObservers();
     }
 
     @Override
@@ -101,6 +121,7 @@ public class Hotel implements IHotel, Serializable {
         }
         clientes.add(cliente);
         guardarDatos();
+        notifyObservers();
     }
 
     @Override
@@ -110,6 +131,7 @@ public class Hotel implements IHotel, Serializable {
         }
         habitaciones.add(habitacion);
         guardarDatos();
+        notifyObservers();
     }
 
     @Override
